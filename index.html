@@ -1,0 +1,39 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Flashcards</title>
+  <meta name="description" content="Flashcards">
+  <meta name="author" content="Matthias Barde">
+
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+</head>
+
+<body>
+  <button id="authorize_button" style="display: none;">Authorize</button>
+  <button id="signout_button" style="display: none;">Sign Out</button>
+
+  <div id="flashcard">
+    <div id="flashcard-front" class="flashcard-face">
+      <div id="flashcard-front-content" class="content"></div>
+      <div class="controls"></div>
+    </div>
+    <div id="flashcard-back" class="flashcard-face">
+      <div id="flashcard-back-content" class="content"></div>
+      <div class="controls">
+        <button id="btn-next-flashcard">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/secret.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/sheets-api.js"></script>
+  <script async defer src="https://apis.google.com/js/api.js"
+          onload="this.onload=function(){};handleClientLoad()"
+          onreadystatechange="if (this.readyState === 'complete') this.onload()">
+  </script>
+</body>
+</html>
