@@ -3,7 +3,9 @@ var fcFront = document.getElementById('flashcard-front')
 var fcBack = document.getElementById('flashcard-back')
 var fcFrontContent = document.getElementById('flashcard-front-content')
 var fcBackContent = document.getElementById('flashcard-back-content')
-var btnNext = document.getElementById('btn-next-flashcard')
+var btnSuccess = document.getElementById('btn-success')
+var btnFail = document.getElementById('btn-fail')
+var CURRENT_FLASHCARD = false
 
 function getRandomFlashcard() {
   return FLASHCARDS[Math.floor(Math.random() * FLASHCARDS.length)]
@@ -17,21 +19,34 @@ function unflipCardWithoutTransition() {
 }
 
 function loadNextFlashcard() {
-  let next = getRandomFlashcard()
-  fcFrontContent.innerText = next['Englisch']
-  fcBackContent.innerText = next['Deutsch']
+  CURRENT_FLASHCARD = getRandomFlashcard()
+  fcFrontContent.innerText = CURRENT_FLASHCARD['Englisch']
+  fcBackContent.innerText = CURRENT_FLASHCARD['Deutsch']
 }
 
 function onFlashcardsInitalized() {
   loadNextFlashcard()
 }
 
-function onNextClicked(evt) {
+function onSuccessClicked(evt) {
   evt.stopPropagation()
+  CURRENT_FLASHCARD[FC_KEY_SUCCESSES] += 1
+  CURRENT_FLASHCARD[FC_KEY_TRIES] += 1
+  updateCounters(CURRENT_FLASHCARD)
   unflipCardWithoutTransition()
   loadNextFlashcard()
 }
-btnNext.onclick = onNextClicked
+btnSuccess.onclick = onSuccessClicked
+
+function onFailClicked(evt) {
+  evt.stopPropagation()
+  CURRENT_FLASHCARD[FC_KEY_FAILS] += 1
+  CURRENT_FLASHCARD[FC_KEY_TRIES] += 1
+  updateCounters(CURRENT_FLASHCARD)
+  unflipCardWithoutTransition()
+  loadNextFlashcard()
+}
+btnFail.onclick = onFailClicked
 
 function onFlashcardFrontClicked() {
   flashcard.classList.add('flipped')

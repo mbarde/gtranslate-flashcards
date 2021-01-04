@@ -1,10 +1,17 @@
 // Array of API discovery doc URLs for APIs used by the quickstart
-var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"]
+const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"]
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly"
+const SCOPES = "https://www.googleapis.com/auth/spreadsheets"
 
+const FC_KEY_SUCCESSES = 'successes'
+const FC_KEY_FAILS = 'fails'
+const FC_KEY_TRIES = 'tries'
+const FC_KEY_ROW = 'row'
+const COL_SUCCESSES = 'E'
+const COL_FAILS = 'F'
+const COL_TRIES = 'G'
 var FLASHCARDS = []
 
 var authorizeButton = document.getElementById('authorize_button')
@@ -55,37 +62,38 @@ function updateSigninStatus(isSignedIn) {
   }
 }
 
-/**
- *  Sign in the user upon button click.
- */
 function handleAuthClick(event) {
   gapi.auth2.getAuthInstance().signIn()
 }
 
-/**
- *  Sign out the user upon button click.
- */
 function handleSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut()
 }
 
-/**
- * Print the names and majors of students in a sample spreadsheet:
- * https://docs.google.com/spreutsch, Englisch, Beute, preyeadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
- */
+function sheetRow2flashcard(row) {
+  var card = {}
+  card[row[0]] = row[2]
+  card[row[1]] = row[3]
+  card[FC_KEY_SUCCESSES] = 0
+  card[FC_KEY_FAILS] = 0
+  card[FC_KEY_TRIES] = 0
+  if (row.length > 4) card[FC_KEY_SUCCESSES] = row[4]
+  if (row.length > 5) card[FC_KEY_FAILS] = row[5]
+  if (row.length > 6) card[FC_KEY_TRIES] = row[6]
+  return card
+}
+
 function initFlashcards() {
   gapi.client.sheets.spreadsheets.values.get({
-    // spreadsheetId: '1a6gQ_8eXZq4t4RzX6_sjG7Ff8sf0YUUem-R5X6ToSVw',
-    spreadsheetId: '1a6gQ_8eXZq4t4RzX6_sjG7Ff8sf0YUUem-R5X6ToSVw',
-    range: 'Gespeicherte Übersetzungen',
+    spreadsheetId: SPREADSHEET_ID,
+    range: SHEET_ID,
   }).then(function(response) {
     let range = response.result
     for (i = 0; i < range.values.length; i++) {
       let row = range.values[i]
-      if (row.length === 4) {
-        var card = {}
-        card[row[0]] = row[2]
-        card[row[1]] = row[3]
+      if (row.length >= 4) {
+        var card = sheetRow2flashcard(row)
+        card[FC_KEY_ROW] = i+1
         FLASHCARDS.push(card)
       }
     }
@@ -93,4 +101,35 @@ function initFlashcards() {
   }, function(response) {
     console.error(response.result.error.message)
   });
+}
+
+function updateCell(cellID, value) {
+  gapi.client.sheets.spreadsheets.values.update({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${SHEET_ID}!${cellID}:${cellID}`,
+    valueInputOption: 'USER_ENTERED',
+    values: [[value]]
+  }).then((response) => {
+    var result = response.result
+    console.log(`${result.updatedCells} cells updated.`)
+  })
+}
+
+function updateCounters(card) {
+  let row = card[FC_KEY_ROW]
+  let cellFrom = `${COL_SUCCESSES}${row}`
+  let cellTo = `${COL_TRIES}${row}`
+  gapi.client.sheets.spreadsheets.values.update({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${SHEET_ID}!${cellFrom}:${cellTo}`,
+    valueInputOption: 'USER_ENTERED',
+    values: [[
+      card[FC_KEY_SUCCESSES],
+      card[FC_KEY_FAILS],
+      card[FC_KEY_TRIES],
+    ]]
+  }).then((response) => {
+    var result = response.result;
+    console.log(`${result.updatedCells} cells updated.`);
+  })
 }
