@@ -23,6 +23,10 @@
 
 .flashcard-face {
   background: #f0f0f0;
+  border: 1px solid #7d7d7d;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 1px 9px -2px #000000;
+  box-shadow: 0px 1px 9px -2px #000000;
   color: black;
   backface-visibility: hidden;
   height: 100%;
@@ -44,6 +48,8 @@
 #btn-next-flashcard {
   background-color: #4CAF50;
   border: none;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   bottom: 0;
   cursor: pointer;
   display: block;
