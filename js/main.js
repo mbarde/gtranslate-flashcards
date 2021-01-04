@@ -9,16 +9,29 @@ function getRandomFlashcard() {
   return FLASHCARDS[Math.floor(Math.random() * FLASHCARDS.length)]
 }
 
-function loadNextFlashcard() {  
+function unflipCardWithoutTransition() {
+  let transition = flashcard.style.transition
+  flashcard.style.transition = 'none'
+  flashcard.classList.remove('flipped')
+  setTimeout(() => { flashcard.style.transition = transition }, 500)
+}
+
+function loadNextFlashcard() {
   let next = getRandomFlashcard()
   fcFrontContent.innerText = next['Englisch']
   fcBackContent.innerText = next['Deutsch']
 }
-btnNext.onclick = loadNextFlashcard
 
 function onFlashcardsInitalized() {
   loadNextFlashcard()
 }
+
+function onNextClicked(evt) {
+  evt.stopPropagation()
+  unflipCardWithoutTransition()
+  loadNextFlashcard()
+}
+btnNext.onclick = onNextClicked
 
 function onFlashcardFrontClicked() {
   flashcard.classList.add('flipped')
