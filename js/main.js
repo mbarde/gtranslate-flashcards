@@ -60,7 +60,7 @@ function onFlashcardsInitalized() {
 
 function onStartChallenge(evt) {
   var count = prompt('How many cards?', '20')
-  if (isNaN(count) || count > FLASHCARDS.length) count = 20
+  if (isNaN(count) || count > FLASHCARDS.length || count < 2) count = 20
   FLASHCARDS = getRandomSetOfFlashcards(count)
   CHALLENGE_IS_ON = true
   onFlashcardsInitalized()
@@ -72,14 +72,15 @@ function onSuccessClicked(evt) {
   CURRENT_FLASHCARD[FC_KEY_SUCCESSES] += 1
   CURRENT_FLASHCARD[FC_KEY_TRIES] += 1
   updateCounters(CURRENT_FLASHCARD)
+  unflipCardWithoutTransition()
   if (CHALLENGE_IS_ON === true) {
     removeCurrentFlashcard()
     if (CHALLENGE_IS_ON && FLASHCARDS.length === 0) {
+      CHALLENGE_IS_ON = false
       initFlashcards()
       return
     }
   }
-  unflipCardWithoutTransition()
   loadNextFlashcard()
 }
 btnSuccess.onclick = onSuccessClicked
