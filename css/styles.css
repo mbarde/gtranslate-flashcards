@@ -1,3 +1,17 @@
+button {
+  background: none;
+  border: 1px solid black;
+  cursor: pointer;
+  font-size: 22px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+button:hover {
+  background: black;
+  color: white;
+}
+
 #flashcard {
   height: 300px;
   max-width: 1000px;

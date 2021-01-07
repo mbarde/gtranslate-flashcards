@@ -25,6 +25,7 @@ function loadNextFlashcard() {
 }
 
 function onFlashcardsInitalized() {
+  flashcard.style.display = 'block'
   loadNextFlashcard()
 }
 

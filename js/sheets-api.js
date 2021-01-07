@@ -67,6 +67,7 @@ function handleAuthClick(event) {
 }
 
 function handleSignoutClick(event) {
+  document.getElementById('flashcard').style.display = 'none'
   gapi.auth2.getAuthInstance().signOut()
 }
 
