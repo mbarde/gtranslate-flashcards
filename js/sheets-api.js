@@ -78,9 +78,9 @@ function sheetRow2flashcard(row) {
   card[FC_KEY_SUCCESSES] = 0
   card[FC_KEY_FAILS] = 0
   card[FC_KEY_TRIES] = 0
-  if (row.length > 4) card[FC_KEY_SUCCESSES] = row[4]
-  if (row.length > 5) card[FC_KEY_FAILS] = row[5]
-  if (row.length > 6) card[FC_KEY_TRIES] = row[6]
+  if (row.length > 4) card[FC_KEY_SUCCESSES] = parseInt(row[4])
+  if (row.length > 5) card[FC_KEY_FAILS] = parseInt(row[5])
+  if (row.length > 6) card[FC_KEY_TRIES] = parseInt(row[6])
   return card
 }
 
