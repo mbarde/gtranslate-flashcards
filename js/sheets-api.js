@@ -85,6 +85,7 @@ function sheetRow2flashcard(row) {
 }
 
 function initFlashcards() {
+  document.getElementById('flashcard').style.display = 'none'
   gapi.client.sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
     range: SHEET_ID,
