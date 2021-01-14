@@ -11,7 +11,13 @@ var CURRENT_FLASHCARD = false
 var CHALLENGE_IS_ON = false
 
 function getRandomFlashcard() {
-  return FLASHCARDS[Math.floor(Math.random() * FLASHCARDS.length)]
+  if (FLASHCARDS.length === 1) return FLASHCARDS[0]
+  var newCard;
+  do {
+    // avoid selecting current card again
+    newCard =  FLASHCARDS[Math.floor(Math.random() * FLASHCARDS.length)]
+  } while (newCard === CURRENT_FLASHCARD)
+  return newCard
 }
 
 function getRandomSetOfFlashcards(count) {
