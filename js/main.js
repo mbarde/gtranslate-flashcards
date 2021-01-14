@@ -9,6 +9,7 @@ var btnFail = document.getElementById('btn-fail')
 var btnChallenge = document.getElementById('btn-challenge')
 var CURRENT_FLASHCARD = false
 var CHALLENGE_IS_ON = false
+const LS_KEY_CHALLENGES = 'challenges'
 
 function getRandomFlashcard() {
   if (FLASHCARDS.length === 1) return FLASHCARDS[0]
@@ -73,6 +74,7 @@ function onStartChallenge(evt) {
   FLASHCARDS = getRandomSetOfFlashcards(count)
   CHALLENGE_IS_ON = true
   onFlashcardsInitalized()
+  storeCurrentChallenge()
 }
 btnChallenge.onclick = onStartChallenge
 
@@ -80,6 +82,23 @@ function endChallenge() {
   btnChallenge.style.display = 'block'
   CHALLENGE_IS_ON = false
   initFlashcards()
+}
+
+function storeCurrentChallenge() {
+  let now = new Date()
+  let challenge = {
+    title: formatDateTime(now),
+    timestamp: now.getTime(),
+    cards: JSON.parse(JSON.stringify(FLASHCARDS)), /* deep clone */
+  }
+  var challenges = localStorage.getItem(LS_KEY_CHALLENGES)
+  if (challenges === null) challenges = []
+  challenges.push(challenge)
+  localStorage.setItem(LS_KEY_CHALLENGES, JSON.stringify(challenges))
+}
+
+function formatDateTime(date) {
+  return `${date.getDate()}.${date.getMonth()+1}.${date.getYear()} - ${date.getHours()}:${date.getMinutes()}`
 }
 
 function onSuccessClicked(evt) {
