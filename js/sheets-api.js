@@ -86,6 +86,9 @@ function sheetRow2flashcard(row) {
 
 function initFlashcards() {
   document.getElementById('flashcard').style.display = 'none'
+  document.getElementById('btn-challenge').style.display = 'none'
+  var elLoading = document.getElementById('loading')
+  elLoading.style.display = 'block'
   gapi.client.sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
     range: SHEET_ID,
@@ -99,6 +102,7 @@ function initFlashcards() {
         FLASHCARDS.push(card)
       }
     }
+    elLoading.style.display = 'none'
     onFlashcardsInitalized()
   }, function(response) {
     console.error(response.result.error.message)

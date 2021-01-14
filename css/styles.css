@@ -12,6 +12,12 @@ button:hover {
   color: white;
 }
 
+#loading {
+  padding: 30px;
+  text-align: center;
+  width: 100%;
+}
+
 #cards-counter {
   display: block;
   margin-bottom: 10px;

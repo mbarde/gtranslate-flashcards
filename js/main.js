@@ -60,11 +60,14 @@ function removeCurrentFlashcard() {
 
 function onFlashcardsInitalized() {
   cardsCounter.innerText = `Number of cards: ${FLASHCARDS.length}`
+  document.getElementById('loading').style.display = 'none'
   flashcard.style.display = 'block'
+  if (CHALLENGE_IS_ON === false) btnChallenge.style.display = 'block'
   loadNextFlashcard()
 }
 
 function onStartChallenge(evt) {
+  btnChallenge.style.display = 'none'
   var count = prompt('How many cards?', '20')
   if (isNaN(count) || count > FLASHCARDS.length || count < 2) count = 20
   FLASHCARDS = getRandomSetOfFlashcards(count)
@@ -72,6 +75,12 @@ function onStartChallenge(evt) {
   onFlashcardsInitalized()
 }
 btnChallenge.onclick = onStartChallenge
+
+function endChallenge() {
+  btnChallenge.style.display = 'block'
+  CHALLENGE_IS_ON = false
+  initFlashcards()
+}
 
 function onSuccessClicked(evt) {
   evt.stopPropagation()
@@ -82,8 +91,7 @@ function onSuccessClicked(evt) {
   if (CHALLENGE_IS_ON === true) {
     removeCurrentFlashcard()
     if (CHALLENGE_IS_ON && FLASHCARDS.length === 0) {
-      CHALLENGE_IS_ON = false
-      initFlashcards()
+      endChallenge()
       return
     }
   }
