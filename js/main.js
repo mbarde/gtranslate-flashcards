@@ -73,6 +73,7 @@ function onStartChallenge(evt) {
   if (isNaN(count) || count > FLASHCARDS.length || count < 2) count = 20
   FLASHCARDS = getRandomSetOfFlashcards(count)
   CHALLENGE_IS_ON = true
+  unflipCardWithoutTransition()
   onFlashcardsInitalized()
   storeCurrentChallenge()
 }

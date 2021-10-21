@@ -104,3 +104,7 @@ button:hover {
   border-bottom-right-radius: 10px;
   right: 0;
 }
+
+h3 {
+  text-align: center;
+}
