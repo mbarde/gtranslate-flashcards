@@ -153,3 +153,32 @@ function updateCounters(card) {
       console.log(`${result.updatedCells} cells updated.`)
     })
 }
+
+function updateRow(card) {
+  let lang0 = 'Englisch'
+  let lang1 = 'Deutsch'
+  let row = card[FC_KEY_ROW]
+  let cellFrom = `A${row}`
+  let cellTo = `${COL_TRIES}${row}`
+  gapi.client.sheets.spreadsheets.values
+    .update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${SHEET_ID}!${cellFrom}:${cellTo}`,
+      valueInputOption: 'USER_ENTERED',
+      values: [
+        [
+          lang0,
+          lang1,
+          card[lang0],
+          card[lang1],
+          card[FC_KEY_SUCCESSES],
+          card[FC_KEY_FAILS],
+          card[FC_KEY_TRIES],
+        ],
+      ],
+    })
+    .then((response) => {
+      let result = response.result
+      console.log(`${result.updatedCells} cells updated.`)
+    })
+}

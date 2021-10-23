@@ -7,6 +7,7 @@ var fcBackContent = document.getElementById('flashcard-back-content')
 var btnSuccess = document.getElementById('btn-success')
 var btnFail = document.getElementById('btn-fail')
 var btnChallenge = document.getElementById('btn-challenge')
+var btnUpdateTranslation = document.getElementById('btn-update-translation')
 var CURRENT_FLASHCARD = false
 var CHALLENGE_IS_ON = false
 const LS_KEY_CHALLENGES = 'challenges'
@@ -66,6 +67,7 @@ function onFlashcardsInitalized() {
   document.getElementById('loading').style.display = 'none'
   flashcard.style.display = 'block'
   if (CHALLENGE_IS_ON === false) btnChallenge.style.display = 'block'
+  btnUpdateTranslation.style.display = 'block'
   loadNextFlashcard()
 }
 
@@ -143,3 +145,14 @@ function onFlashcardBackClicked() {
   flashcard.classList.remove('flipped')
 }
 fcBack.onclick = onFlashcardBackClicked
+
+function onUpdateTranslation() {
+  const lang = 'Deutsch'
+  let val = prompt('New value:', CURRENT_FLASHCARD[lang])
+  if (val) {
+    CURRENT_FLASHCARD[lang] = val.trim()
+    updateRow(CURRENT_FLASHCARD)
+    fcBackContent.innerText = CURRENT_FLASHCARD['Deutsch']
+  }
+}
+btnUpdateTranslation.onclick = onUpdateTranslation
