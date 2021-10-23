@@ -1,3 +1,4 @@
+
 var cardsCounter = document.getElementById('cards-counter')
 var flashcard = document.getElementById('flashcard')
 var fcFront = document.getElementById('flashcard-front')
@@ -93,7 +94,8 @@ function storeCurrentChallenge() {
     cards: JSON.parse(JSON.stringify(FLASHCARDS)), /* deep clone */
   }
   var challenges = localStorage.getItem(LS_KEY_CHALLENGES)
-  if (challenges === null) challenges = []
+  if (challenges === null) challenges = '[]'
+  challenges = JSON.parse(challenges)
   challenges.push(challenge)
   localStorage.setItem(LS_KEY_CHALLENGES, JSON.stringify(challenges))
 }
