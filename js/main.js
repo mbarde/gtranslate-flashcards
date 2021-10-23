@@ -8,6 +8,7 @@ var btnSuccess = document.getElementById('btn-success')
 var btnFail = document.getElementById('btn-fail')
 var btnChallenge = document.getElementById('btn-challenge')
 var btnUpdateTranslation = document.getElementById('btn-update-translation')
+var btnLookUp = document.getElementById('btn-look-up')
 var CURRENT_FLASHCARD = false
 var CHALLENGE_IS_ON = false
 const LS_KEY_CHALLENGES = 'challenges'
@@ -48,10 +49,14 @@ function unflipCardWithoutTransition() {
   }, 500)
 }
 
-function loadNextFlashcard() {
-  CURRENT_FLASHCARD = getRandomFlashcard()
+function renderCurrentFlashCard() {
   fcFrontContent.innerText = CURRENT_FLASHCARD['Englisch']
   fcBackContent.innerText = CURRENT_FLASHCARD['Deutsch']
+}
+
+function loadNextFlashcard() {
+  CURRENT_FLASHCARD = getRandomFlashcard()
+  renderCurrentFlashCard()
 }
 
 function removeCurrentFlashcard() {
@@ -68,6 +73,7 @@ function onFlashcardsInitalized() {
   flashcard.style.display = 'block'
   if (CHALLENGE_IS_ON === false) btnChallenge.style.display = 'block'
   btnUpdateTranslation.style.display = 'block'
+  btnLookUp.style.display = 'block'
   loadNextFlashcard()
 }
 
@@ -152,7 +158,14 @@ function onUpdateTranslation() {
   if (val) {
     CURRENT_FLASHCARD[lang] = val.trim()
     updateRow(CURRENT_FLASHCARD)
-    fcBackContent.innerText = CURRENT_FLASHCARD['Deutsch']
+    renderCurrentFlashCard()
   }
 }
 btnUpdateTranslation.onclick = onUpdateTranslation
+
+function onLookUp() {
+  const lang = 'Englisch'
+  let url = `https://www.dict.cc/?s=${CURRENT_FLASHCARD[lang]}`
+  window.open(url, '_blank').focus();
+}
+btnLookUp.onclick = onLookUp
