@@ -1,4 +1,3 @@
-
 var cardsCounter = document.getElementById('cards-counter')
 var flashcard = document.getElementById('flashcard')
 var fcFront = document.getElementById('flashcard-front')
@@ -14,10 +13,10 @@ const LS_KEY_CHALLENGES = 'challenges'
 
 function getRandomFlashcard() {
   if (FLASHCARDS.length === 1) return FLASHCARDS[0]
-  var newCard;
+  var newCard
   do {
     // avoid selecting current card again
-    newCard =  FLASHCARDS[Math.floor(Math.random() * FLASHCARDS.length)]
+    newCard = FLASHCARDS[Math.floor(Math.random() * FLASHCARDS.length)]
   } while (newCard === CURRENT_FLASHCARD)
   return newCard
 }
@@ -43,7 +42,9 @@ function unflipCardWithoutTransition() {
   let transition = flashcard.style.transition
   flashcard.style.transition = 'none'
   flashcard.classList.remove('flipped')
-  setTimeout(() => { flashcard.style.transition = transition }, 500)
+  setTimeout(() => {
+    flashcard.style.transition = transition
+  }, 500)
 }
 
 function loadNextFlashcard() {
@@ -91,7 +92,7 @@ function storeCurrentChallenge() {
   let challenge = {
     title: formatDateTime(now),
     timestamp: now.getTime(),
-    cards: JSON.parse(JSON.stringify(FLASHCARDS)), /* deep clone */
+    cards: JSON.parse(JSON.stringify(FLASHCARDS)) /* deep clone */,
   }
   var challenges = localStorage.getItem(LS_KEY_CHALLENGES)
   if (challenges === null) challenges = '[]'
@@ -101,7 +102,9 @@ function storeCurrentChallenge() {
 }
 
 function formatDateTime(date) {
-  return `${date.getDate()}.${date.getMonth()+1}.${date.getYear()} - ${date.getHours()}:${date.getMinutes()}`
+  return `${date.getDate()}.${
+    date.getMonth() + 1
+  }.${date.getYear()} - ${date.getHours()}:${date.getMinutes()}`
 }
 
 function onSuccessClicked(evt) {

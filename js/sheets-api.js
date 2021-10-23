@@ -1,9 +1,11 @@
 // Array of API discovery doc URLs for APIs used by the quickstart
-const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"]
+const DISCOVERY_DOCS = [
+  'https://sheets.googleapis.com/$discovery/rest?version=v4',
+]
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-const SCOPES = "https://www.googleapis.com/auth/spreadsheets"
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 
 const FC_KEY_SUCCESSES = 'successes'
 const FC_KEY_FAILS = 'fails'
@@ -29,22 +31,27 @@ function handleClientLoad() {
  *  listeners.
  */
 function initClient() {
-  gapi.client.init({
-    apiKey: API_KEY,
-    clientId: CLIENT_ID,
-    discoveryDocs: DISCOVERY_DOCS,
-    scope: SCOPES
-  }).then(function () {
-    // Listen for sign-in state changes.
-    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus)
+  gapi.client
+    .init({
+      apiKey: API_KEY,
+      clientId: CLIENT_ID,
+      discoveryDocs: DISCOVERY_DOCS,
+      scope: SCOPES,
+    })
+    .then(
+      function () {
+        // Listen for sign-in state changes.
+        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus)
 
-    // Handle the initial sign-in state.
-    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())
-    authorizeButton.onclick = handleAuthClick
-    signoutButton.onclick = handleSignoutClick
-  }, function(error) {
-    console.error(JSON.stringify(error, null, 2))
-  })
+        // Handle the initial sign-in state.
+        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())
+        authorizeButton.onclick = handleAuthClick
+        signoutButton.onclick = handleSignoutClick
+      },
+      function (error) {
+        console.error(JSON.stringify(error, null, 2))
+      }
+    )
 }
 
 /**
@@ -89,53 +96,60 @@ function initFlashcards() {
   document.getElementById('btn-challenge').style.display = 'none'
   var elLoading = document.getElementById('loading')
   elLoading.style.display = 'block'
-  gapi.client.sheets.spreadsheets.values.get({
-    spreadsheetId: SPREADSHEET_ID,
-    range: SHEET_ID,
-  }).then(function(response) {
-    let range = response.result
-    for (i = 0; i < range.values.length; i++) {
-      let row = range.values[i]
-      if (row.length >= 4) {
-        var card = sheetRow2flashcard(row)
-        card[FC_KEY_ROW] = i+1
-        FLASHCARDS.push(card)
+  gapi.client.sheets.spreadsheets.values
+    .get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: SHEET_ID,
+    })
+    .then(
+      function (response) {
+        let range = response.result
+        for (i = 0; i < range.values.length; i++) {
+          let row = range.values[i]
+          if (row.length >= 4) {
+            var card = sheetRow2flashcard(row)
+            card[FC_KEY_ROW] = i + 1
+            FLASHCARDS.push(card)
+          }
+        }
+        elLoading.style.display = 'none'
+        onFlashcardsInitalized()
+      },
+      function (response) {
+        console.error(response.result.error.message)
       }
-    }
-    elLoading.style.display = 'none'
-    onFlashcardsInitalized()
-  }, function(response) {
-    console.error(response.result.error.message)
-  });
+    )
 }
 
 function updateCell(cellID, value) {
-  gapi.client.sheets.spreadsheets.values.update({
-    spreadsheetId: SPREADSHEET_ID,
-    range: `${SHEET_ID}!${cellID}:${cellID}`,
-    valueInputOption: 'USER_ENTERED',
-    values: [[value]]
-  }).then((response) => {
-    var result = response.result
-    console.log(`${result.updatedCells} cells updated.`)
-  })
+  gapi.client.sheets.spreadsheets.values
+    .update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${SHEET_ID}!${cellID}:${cellID}`,
+      valueInputOption: 'USER_ENTERED',
+      values: [[value]],
+    })
+    .then((response) => {
+      let result = response.result
+      console.log(`${result.updatedCells} cells updated.`)
+    })
 }
 
 function updateCounters(card) {
   let row = card[FC_KEY_ROW]
   let cellFrom = `${COL_SUCCESSES}${row}`
   let cellTo = `${COL_TRIES}${row}`
-  gapi.client.sheets.spreadsheets.values.update({
-    spreadsheetId: SPREADSHEET_ID,
-    range: `${SHEET_ID}!${cellFrom}:${cellTo}`,
-    valueInputOption: 'USER_ENTERED',
-    values: [[
-      card[FC_KEY_SUCCESSES],
-      card[FC_KEY_FAILS],
-      card[FC_KEY_TRIES],
-    ]]
-  }).then((response) => {
-    var result = response.result;
-    console.log(`${result.updatedCells} cells updated.`);
-  })
+  gapi.client.sheets.spreadsheets.values
+    .update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${SHEET_ID}!${cellFrom}:${cellTo}`,
+      valueInputOption: 'USER_ENTERED',
+      values: [
+        [card[FC_KEY_SUCCESSES], card[FC_KEY_FAILS], card[FC_KEY_TRIES]],
+      ],
+    })
+    .then((response) => {
+      let result = response.result
+      console.log(`${result.updatedCells} cells updated.`)
+    })
 }
